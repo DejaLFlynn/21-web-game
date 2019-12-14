@@ -1,28 +1,41 @@
 document.addEventListener("DOMContentLoaded", ()=>{
-    const newDeck = async()=>{
+  
+    const buttons = async()=>{
         try{
-            let newCards = await axios.get("https://deckofcardsapi.com/api/deck/new/")
-            let deck_id = newCards.data.deck_id
-           
-            let id = document.querySelector("#handOfCards")
-            id.innerText = newCards.data.deck_id
-            let button = document.querySelector("#button")
-            button.addEventListener("click",display)
-            debugger
-            
-        }catch(err){
-            console.log('error')
-        }
-    }
-    const display = async()=>{
-        let id = document.querySelector("#drawId")
-        let draw = await axios.get(`https://deckofcardsapi.com/api/deck/${id.innerText}/draw/?count=5`)
-        draw.data.cards.forEach(el=>{
-            let image = document.createElement("img")
-            image.src = el.image
-            document.body.appendChild(image)
+        let draw = document.querySelector("#drawCard")
+        draw.addEventListener("click",()=>{
+            drawCard()
         })
+        let hit = document.querySelector("#hitCard")
+        hit.addEventListener("click",()=>{
+            hitCard()
+        })
+    } catch(err){
+        console.log("error")
     }
-    newDeck()
-    display()
+}
+const hitCard = async()=>{
+let id = document.querySelector("#drawId")
+let hit = await axios.get(`https://deckofcardsapi.com/api/deck/${id.innerText}/draw/?count=1`)
+hit.data.cards.forEach(el=>{
+    let image =document.createElement("img")
+    image.src =el.image
+    document.body.appendChild(image)
+})
+}
+const drawCard = async() => {
+    let id = document.querySelector("#handOfCards")
+    let drawCard = await axios.get(`https://deckofcardsapi.com/api/deck/${id.innerText}/draw/?count=2`);
+
+    drawCard.data.cards.forEach(el=>{
+        let image = document.createElement("img");
+        image.src = el.image;
+        document.body.appendChild(image)
+    })
+    }
+
+    hitCard()
+    drawCard()
+    buttons()
+   
 })
