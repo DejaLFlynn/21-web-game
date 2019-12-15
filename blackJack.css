@@ -2,4 +2,8 @@ body{
     background: green;
     background-image: url("https://previews.123rf.com/images/eshma/eshma1609/eshma160900057/63822784-cards-on-green-felt-casino-table-background-two-aces-copy-space-in-center.jpg");
     background-repeat: no-repeat;
+    text-align: center;
+}
+#handOfCards{
+    align-content: center;
 }
