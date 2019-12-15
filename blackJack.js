@@ -35,7 +35,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 })   
             }
             const startGame = async()=>{
-            
+            for(let i=0; i <drawCard.length; i++){
+                if(drawCard[i].value == "KING"|| drawCard[i].value == "QUEEN"|| drawCard[i].value =="JACK"){
+                    drawCard[i].value = 10;
+                }
+                if(drawCard[i].value =="ACE"){
+                    drawCard[i].value = 11;
+                }
+                if(drawCard[i].value !="KING"&& drawCard[i].value !="QUEEN"&& drawCard[i].value != "JACK"&& drawCard[i].value != "ACE"){
+                    drawCard[i].value = parseInt(drawCard[i].value)
+                }
+            }
+            allCards = drawCard;
             }
     newDeckCards()
+    startGame()
 })
