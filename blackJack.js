@@ -48,6 +48,13 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             allCards = drawCard;
             }
+            const winningHand = async()=>{
+                let score = 0
+                let winningHand 
+                while(player <=21){
+                    console.log("you won!")
+                }
+            }
     newDeckCards()
     startGame()
 })
