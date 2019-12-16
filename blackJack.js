@@ -5,49 +5,35 @@ document.addEventListener('DOMContentLoaded', () => {
             let id = document.querySelector("#deckId")
             id.innerText = newDeck.data.deck_id
 // debugger 
-            let dealer = []
-            let player = []
-            let gameStart = false;
-            
             let button = document.querySelector('#button')
             button.addEventListener("click", (displayCard));
             let button2 = document.querySelector("#button2") 
-            button2.addEventListener("click", (display2Cards))    
+            button2.addEventListener("click", (startGame))   
+            // let dealer = []
+            // let player = []
+            // let dealerScore = 0;
+            // let playerScore = 0;
+            // let dealerDiv
+            // let playerDiv
+            // let start; 
             // debugger
         } catch (err) {
             console.log(err)
             debugger
         }
     }
-            const handTotal=async()=>{
-                let total = 0
-                let ace = false;
-                for(let i=1; i <=handTotal.length; i++){
-                    total += Math.min(10, hand[i].card.value )
-                    if(hand[i].card.value ==1 )
-                        ace = true;
-                }
-                    if (total + 10 <=21 && ace)
-                        total += 10;
-                        return total
-                    
-                
+         const handTotal=(total)=>{
+            let playerScore = 0;
+            let dealerScore = 0;
+             if(playerScore > dealerScore && playerScore <=21){
+                winningHand()
+             }else if(dealerScore <21 && dealerScore> playerScore){
+                 dealerWin()
+             }else if(playerScore >21 && dealerScore> 21){
+                tie()
+             }    
             }
-            const startGame = ()=>{
-                let dealer = handTotal(player1)
-                let player = handTotal(player2)
-                if(dealer == 21){
-                    endGame(false, "you both have 21")
-                }else  {
-                    endGame(false, "dealer has 21")
-                }else if(player=== 21){
-                    endGame(true, "you have 21")
-                }
-            }
-            const endGame =()=>{
-                let dealer=handTotal(21)
-                let player = handTotal(21)
-            } 
+
             const displayCard = async() => {
             let id = document.querySelector("#deckId")
             let drawCard = await axios.get(`https://deckofcardsapi.com/api/deck/${id.innerText}/draw/?count=1`);
@@ -57,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.body.appendChild(image)
             })
             }
-            const  display2Cards = async()=>{
+            const  startGame = async()=>{
                 let id = document.querySelector("#deckId")
                 let drawCard = await axios.get(`https://deckofcardsapi.com/api/deck/${id.innerText}/draw/?count=2`);
                 drawCard.data.cards.forEach(el=>{
@@ -66,7 +52,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     document.body.appendChild(image)
                 })   
             }
-            const startGame = async(winningHand, startGame, endGame)=>{
+            const cardValue = async()=>{
+             
                 let handOfCards = document.querySelector("#handOfCards")
             for(let i=0; i <drawCard.length; i++){
                 if(drawCard[i].value == "KING"|| drawCard[i].value == "QUEEN"|| drawCard[i].value =="JACK"){
@@ -78,6 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if(drawCard[i].value !="KING"&& drawCard[i].value !="QUEEN"&& drawCard[i].value != "JACK"&& drawCard[i].value != "ACE"){
                     drawCard[i].value = parseInt(drawCard[i].value)
                 }
+
                 let card = document.createElement("img")
                 card.src = card[i].image
                 card.id = "drawCard"
@@ -86,12 +74,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
-            const winningHand = async(player1,player2)=>{
-
-                if(player1 > player2 && player1 <=21){
-                    console.log("you won!")
-                }
+            const winningHand = ()=>{
+                let results = document.querySelector("#results")
+                let playerWins = document.createElement("h3")
+                results.innerText = "Winner"
+                results.appendChild(playerWins)
+            }
+            const tie= ()=>{
+                let sameScore = document.createElement("h4")
+                sameScore.innerText = "Tie"
+                resultsDiv.replaceChild(sameScore,handOfCards)
             }
     newDeckCards()
-    startGame()
+    handTotal()
+    // startGame()
+    // winningHand()
+    // endGame()
+    // handTotal()
+
 })
