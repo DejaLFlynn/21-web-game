@@ -11,9 +11,13 @@ document.addEventListener('DOMContentLoaded', () => {
             button2.addEventListener("click", () => {
                 startGame()
                 removeButton()
+                button2.parentNode.removeChild(button2)
             })
             let stay = document.querySelector("#stay")
-            stay.addEventListener("click", (removeButton))
+            stay.addEventListener("click", () => {
+                removeButton()
+                stay.parentNode.removeChild(stay)
+            })
         } catch (err) {
             console.log(err)
             debugger
@@ -22,9 +26,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const handTotal = (total, results) => {
         let playerScore = 0;
         let dealerScore = 0;
-        let results = document.querySelector("#results")
-        let total = document.createElement("h3")
-
+        // let result = document.querySelector("#results")
+        // let total = document.createElement("h3")
         if (playerScore > dealerScore && playerScore <= 21) {
             winningHand()
         } else if (dealerScore < 21 && dealerScore > playerScore) {
@@ -65,7 +68,6 @@ document.addEventListener('DOMContentLoaded', () => {
             results.appendChild(li)
         })
     }
-
     const startGame = async () => {
         let playerScore = 0;
         let dealerScore = 0;
@@ -80,13 +82,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     const removeButton = async () => {
         let results = document.querySelector("results")
-        let buttonRem1 = document.querySelector("button2")
-        results.removeChild(buttonRem1)
-        let buttonRem2 = document.querySelector("#stay")
-        results.removeChild(buttonRem2)
+        let button = document.querySelector("button2")
+        results.removeChild(button)
+        let button2 = document.querySelector("#stay")
+        results.removeChild(button2)
     }
-
-
     const winningHand = () => {
         let results = document.querySelector("#results")
         let playerWins = document.createElement("h3")
@@ -100,11 +100,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     newDeckCards()
     handTotal()
-    cardValue()
     removeButton()
-    // startGame()
-    // winningHand()
-    // endGame()
-    // handTotal()
 
 })
