@@ -4,30 +4,30 @@ document.addEventListener('DOMContentLoaded', () => {
             let newDeck = await axios.get("https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1")
             let id = document.querySelector("#deckId")
             id.innerText = newDeck.data.deck_id
-            // debugger 
+           
             let button = document.querySelector('#button')
             button.addEventListener("click", (displayCard));
             let button2 = document.querySelector("#button2")
             button2.addEventListener("click", () => {
                 startGame()
-                removeButton()
+        
                 button2.parentNode.removeChild(button2)
             })
             let stay = document.querySelector("#stay")
             stay.addEventListener("click", () => {
-                removeButton()
+              
                 stay.parentNode.removeChild(stay)
             })
         } catch (err) {
             console.log(err)
-            debugger
+            
         }
     }
     const handTotal = (total, results) => {
         let playerScore = 0;
         let dealerScore = 0;
-        // let result = document.querySelector("#results")
-        // let total = document.createElement("h3")
+        let result = document.querySelector("#displayCard")
+        let total = document.createElement("h3")
         if (playerScore > dealerScore && playerScore <= 21) {
             winningHand()
         } else if (dealerScore < 21 && dealerScore > playerScore) {
@@ -35,6 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (playerScore > 21 && dealerScore > 21) {
             tie()
         }
+        
     }
 
     const displayCard = async () => {
@@ -43,6 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
         drawCard.data.cards.forEach(el => {
             let image = document.createElement("img");
             image.src = el.image;
+            drawCard.innerText = ""
             document.body.appendChild(image)
             if (el.value === "KING" || el.value === "QUEEN" || el.value === "JACK") {
                 if (results.id === "displayCards") {
@@ -66,7 +68,9 @@ document.addEventListener('DOMContentLoaded', () => {
             let li = document.createElement("li")
             li.appendChild(img)
             results.appendChild(li)
+            drawCard.parentNode.appendChild(results)
         })
+
     }
     const startGame = async () => {
         let playerScore = 0;
@@ -79,14 +83,21 @@ document.addEventListener('DOMContentLoaded', () => {
             document.body.appendChild(image)
 
         })
+        computerGame()
     }
-    const removeButton = async () => {
-        let results = document.querySelector("results")
-        let button = document.querySelector("button2")
-        results.removeChild(button)
-        let button2 = document.querySelector("#stay")
-        results.removeChild(button2)
+    const computerGame = async () => {
+        let playerScore = 0;
+        let dealerScore = 0;
+        let id = document.querySelector("#deckId")
+        let drawCard = await axios.get(`https://deckofcardsapi.com/api/deck/${id.innerText}/draw/?count=2`);
+        drawCard.data.cards.forEach(el => {
+            let image = document.createElement("img");
+            image.src = el.image;
+            document.body.appendChild(image)
+
+        })
     }
+
     const winningHand = () => {
         let results = document.querySelector("#results")
         let playerWins = document.createElement("h3")
@@ -100,6 +111,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     newDeckCards()
     handTotal()
-    removeButton()
+ 
 
 })
