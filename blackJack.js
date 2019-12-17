@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     let total = 0
+    let res = 0
     let newArr =[]
     const newDeckCards = async () => {
         try {
@@ -23,21 +24,22 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     const handTotal = (arr) => {
-      
+     
        arr.forEach(el=>{
-        if (el.value === "KING" || el.value === "QUEEN" || el.value === "JACK") {
-            el.value = 10
-            total +=el.value;
-        } else if (el.value == "ACE") {
+           debugger
+        if (el === "KING" || el === "QUEEN" || el === "JACK") {
+            el = 10
+            total +=el;
+        } else if (el == "ACE") {
             if(total <11){
-                el.value = 11;
-                total +=el.value
+                el = 11;
+                total +=el
             } else if(total === 20){
-                el.value = 1;
-                total += el.value
+                el = 1;
+                total += el
             }
         }else{
-            total +=Number(el.value)
+            total +=Number(el)
         }
        })
        res += total;
@@ -56,7 +58,8 @@ document.addEventListener('DOMContentLoaded', () => {
             li.appendChild(img)
             let result = document.querySelector("#results")
             drawCard.parentNode.appendChild(results)
-            let total = document.querySelector("p")
+            let total = document.querySelector("p") 
+            debugger
             total.id = "total"
             result.appendChild(total)
         })   
@@ -72,7 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         })
         computerGame()
-        handTotal()
+        handTotal(drawCard.data.cards)
         winningHand()
     }
     const computerGame = async () => {
@@ -84,7 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
             document.body.appendChild(image)
 
         })
-        handTotal()
+        handTotal(drawCard.data.cards)
         winningHand()
 
     }
@@ -103,7 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
     }
     newDeckCards()
-    handTotal()
+    handTotal(newArr)
     winningHand()
  
 
