@@ -1,49 +1,65 @@
 document.addEventListener('DOMContentLoaded', () => {
     let total = 0
-    let res = 0
-    let newArr =[]
+    let newArr = []
+    let button = document.querySelector('#button')
+    let deckId = document.querySelector("deckId")
+    button.addEventListener("click",(el)=>{
+        newDeckCards()
+    })
+    // const endGame =()=>{
+    //     let button2 = document.querySelector("button2")
+    //     deckId.removeChild(button2)
+    // }
     const newDeckCards = async () => {
         try {
-            let newDeck = await axios.get("https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1")
-            let id = document.querySelector("#deckId")
-            id.innerText = newDeck.data.deck_id
-            let button = document.querySelector('#button')
-            button.addEventListener("click", (displayCard));
-            let button2 = document.querySelector("#button2")
-            button2.addEventListener("click", () => {
-            startGame()
-            button2.parentNode.removeChild(button2)
+            let res =  await axios.get("https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1")
+            let newDeck = res.data;
+            newDeck.forEach(deck=>{
+                let id = document.querySelector("#deckId")
+                id.value = deck.id;
+                id.innerText = deck.res.deck_id
             })
-            let stay = document.querySelector("#stay")
-            stay.addEventListener("click", () => {
-            stay.parentNode.removeChild(stay)
-            })
+
+           
+            // button.addEventListener("click", (displayCard));
+           
+            // button2.addEventListener("click", () => {
+            //     startGame()
+            //     button2.parentNode.removeChild(button2)
+            // })
+            // let stay = document.querySelector("#stay")
+            // stay.addEventListener("click", () => {
+            //     stay.parentNode.removeChild(stay)
+            // })
         } catch (err) {
-            console.log(err) 
+            console.log(err)
         }
+        endGame()
+        diplayCard(startGame, computerGame )
     }
-    
+
     const handTotal = (arr) => {
-     
-       arr.forEach(el=>{
-           debugger
-        if (el === "KING" || el === "QUEEN" || el === "JACK") {
-            el = 10
-            total +=el;
-        } else if (el == "ACE") {
-            if(total <11){
-                el = 11;
-                total +=el
-            } else if(total === 20){
-                el = 1;
-                total += el
+
+        arr.forEach(el => {
+            if (el === "KING" || el === "QUEEN" || el === "JACK") {
+                el = 10
+                total += el;
+            } else if (el == "ACE") {
+                if (total < 11) {
+                    el = 11;
+                    total += el
+                } else if (total === 20) {
+                    el = 1;
+                    total += el
+                }
+            } else {
+                total += Number(el)
             }
-        }else{
-            total +=Number(el)
-        }
-       })
-       res += total;
-       newArr = []
+        })
+        el.arr += total;
+    
+        newArr = []
+        winningHand(arr)
 
     }
     const displayCard = async () => {
@@ -58,11 +74,11 @@ document.addEventListener('DOMContentLoaded', () => {
             li.appendChild(img)
             let result = document.querySelector("#results")
             drawCard.parentNode.appendChild(results)
-            let total = document.querySelector("p") 
+            let total = document.querySelector("p")
             debugger
             total.id = "total"
             result.appendChild(total)
-        })   
+        })
 
     }
     const startGame = async () => {
@@ -103,11 +119,11 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (playerScore > 21 && dealerScore > 21) {
             result.innerText = "tie"
         }
-        
+
     }
-    newDeckCards()
+  
     handTotal(newArr)
     winningHand()
- 
+
 
 })
