@@ -1,53 +1,73 @@
-document.addEventListener("DOMContentLoaded", () => {
-    newDeckCards()
-})
-
-const newDeckCards = async () => {
-    try {
-        let response = await axios.get("https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1")
-        let newDeck = response.data.deck_id
-        let drawResponse = await axios.get(`https://deckofcardsapi.com/api/deck/${newDeck}/draw/?count=2`)
-        let pScore = document.querySelector("#playerScore")
-        let cScore = document.querySelector("#computerScore")
-        drawResponse.data.cards.forEach(el => {
-            let cardImage = document.createElement("img")
-            cardImage.src = el.image
-            pScore.appendChild(cardImage)
-       
-         total =el.value
-         debugger
-            if (el.value === "KING" || el.value === "QUEEN" || el.value === "JACK") {
-                el.value += 10
-            } else if (el.value === "ACE") {
-                if (el.value < 11) {
-                    el.value += 11
-                } else if (total === 20) {
-                    el.value += 1
-                }
-            } else {
-                el.value += Number(total)
-
-            }
-            // playerScore.innerText = el.value
-            
-        })
-        
-        // displayCard.appendChild(playerScore)
-        // gameScore(total)
- 
-
-    } catch (err) {
-        console.log("error")
-    }
-   
-}
-const gameScore =(total)=>{
-    if (playerScore > dealerScore && playerScore <= 21) {
-        results.innerText = "Over"
-    } else if (dealerScore < 21 && dealerScore > playerScore) {
-        result.innerText = "player wins"
-    } else if (playerScore > 21 && dealerScore > 21) {
-        result.innerText = "tie"
+document.addEventListener("DOMContentLoaded", ()=>{
+    const nextDeck = async(url)=>{
+        try{
+            let response = await axios.get(url)
+            return response.data
+        }catch(err){
+            console.log("error")
+        }
     }
     
-} 
+    const gameDeck = async(newDeck,num,ul)=>{
+        let url = `https://deckofcardsapi.com/api/deck/${newDeck}/draw/?count=${num}` 
+        let drawResponse = await nextDeck(url)          
+            let drawACard = drawResponse.data.cards
+            // let total = 0
+            drawACard = document.querySelector("#results")
+            drawACard.forEach(el=>{
+                debugger
+                let value = el.value
+                let li = document.createElement("li")
+                let cardImage = document.createElement("img")
+                cardImage.src = el.image
+                if(value === "KING"|| value === "QUEEN"|| value ==="JACK"){
+                    if(ul.id==="playerCards"){
+                    playerScore +=10
+                    } else{   
+                    computerScore += 10
+                    }
+                }else if(value === "ACE"){
+                    if(ul.id ==="playerCards"){
+                        playerScore +=11
+                    } else {
+                        computerScore +=11
+                    }
+                }else{
+                    if(ul.id ==="playerCards"){
+                    playerScore +=Number(value)
+                    }else{
+                    computerScore+=Number(value)
+         }
+    }
+    playerScore.appendChild(cardImage)
+    ul.appendChild(li)
+    drawACard.innerText = playerScore
+})
+    }
+//working on start of the game with new values
+let stay = document.querySelector("stay")
+stay.addEventListener("click",()=>{
+    await drawACard(deckId, "3", computerCards)
+    computerScore.innerText = computerScoreResult
+    results.appendChild(computerScore)
+    if (playerScore.innerText > computerScore.innerText && playerScore.innerText <= 21) {
+        computerScoreResult.innerText = "computer wins"
+    } else if (computerScore.innerText < 21 && computerScore.innerText > playerScore.innerText) {
+        playerScoreResult.innerText = "player wins"
+    } else if (playerScore.innerText > 21 && computerScore.innerText > 21) {
+        results.innerText = "tie"
+    }
+    stay.parentNode.removeChild(stay)
+    let restart = document.createElement("button")
+    restart.innerText = "Restart Game"
+    restart.id = "restart"
+    restart.addEventListener("click", gameDeck)
+})
+//}
+let start = document.querySelector("startGame")
+start.addEventListener("click",()=>{
+    gameDeck()
+    startGame.parentNode.removeChild(startGame)
+
+})
+})
